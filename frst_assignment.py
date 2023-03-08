@@ -129,7 +129,7 @@ def make_move_ai(game:list, moves_list:list, ai_letter, player_letter):
             poing = 5
         elif game[5] == ai_letter:
             for pos in sides:
-                opos = Oposite(pos)
+                opos = Opposite(pos)
                 if game[pos] == " " and win_block is False and game[opos.oposite()] != player_letter:
                     win_block = True
                     poing = pos
@@ -137,14 +137,14 @@ def make_move_ai(game:list, moves_list:list, ai_letter, player_letter):
 
         elif win_block is False:
             for pos in corners:
-                opos = Oposite(pos)
+                opos = Opposite(pos)
                 if game[pos] == " " and win_block is False and game[opos.oposite()] != player_letter:
                     win_block = True
                     poing = pos
                     break
 
             for pos in sides:
-                opos = Oposite(pos)
+                opos = Opposite(pos)
                 if game[pos] == " " and win_block is False and game[opos.oposite()] != player_letter:
                     win_block = True
                     poing = pos
@@ -173,13 +173,13 @@ def make_move_ai(game:list, moves_list:list, ai_letter, player_letter):
 
     moves_list.remove(poing)
     return poing
-class Oposite():
-    '''class for finding oposite corner or side'''
+class Opposite():
+    '''class for finding opposite corner or side'''
     def __init__(self, pos) -> int:
         self.pos = pos
     
     def oposite(self):
-        '''Finds oposite corner or side'''
+        '''Finds opposite corner or side'''
         if self.pos == 1:
             op_pos = 9
         elif self.pos == 3:
