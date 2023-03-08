@@ -239,7 +239,7 @@ def main():
             game_board(game)
             sleep(1)
             if checking(game, player_letter) is True:
-                print("WOO HOO")
+                print("WOO HOO, You won this game")
                 game_over = True
             else:
                 if len(moves_list) == 0:
