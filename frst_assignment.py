@@ -1,21 +1,24 @@
+'''TIC TAC TOE'''
+import logging
 from random import randint, shuffle
-from time import sleep 
+from time import sleep
 from os import  system
-import board_draw 
+import board_draw
+
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    filename='data.log',
+    filemode='w',
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    datefmt='%d/%m/%Y %H:%M:%S'
+    )
 
 def clear_console():
     '''Clears console'''
     system('cls')
 
 clear_console()
-
-# def game_board(game):
-#     '''Prints game board'''
-#     print(game[1] + '|' + game[2] + '|' + game[3] + "       " + '1' + '|' + '2' + '|' + '3')
-#     print('-+-+-' + "       " + '-+-+-')
-#     print(game[4] + '|' + game[5] + '|' + game[6] + "       " + '4' + '|' + '5' + '|' + '6')
-#     print('-+-+-' + "       " + '-+-+-')
-#     print(game[7] + '|' + game[8] + '|' + game[9] + "       " + '7' + '|' + '8' + '|' + '9')
 
 def checking(game: list, letter:str) -> bool:
     '''Checks if the winning move was made and there is a winner'''
@@ -42,6 +45,11 @@ def choose_your_letter():
         if letter_input.upper() in ("X", "O"):
             letter_input = letter_input.upper()
             letter_check = True
+        elif letter_input == "0":
+            print("We use capital 'o' instead of Zero :) ")
+            logging.warning("Zero was entered instead of X or O")
+        else:
+            logging.warning(f"{letter_input} was entered instead of X or O")
     if letter_input == "X":
         player_letter = "X"
         ai_letter = "O"
@@ -70,8 +78,11 @@ def make_move(game:list, moves_list:list):
                 pos_check = True
             else:
                 print("Position MUST BE integer between 1 and 9 and in the available moves table")
+                logging.warning("impossible move entered !!")
         except ValueError: #idek cia loginima klaidos :D
             print("Position MUST BE integer between 1 and 9 and in the available moves table")
+            logging.warning(f"{pos_input} was enetered instead of integer !!")
+
     moves_list.remove(letter_pos)
     return letter_pos
 
@@ -97,12 +108,12 @@ def make_move_ai(game:list, moves_list:list, ai_letter, player_letter):
         moves_list_copy_two.remove(move)
 
         if checking(testing_list, ai_letter) is True:
-            print(f"Selected winning move {move}")
+            #print(f"Selected winning move {move}")
             poing = move
             win_block = True
             break
         elif checking(testing_list_enemy, player_letter) is True:
-            print(f"Selected blocking move {move}")
+            #print(f"Selected blocking move {move}")
             poing = move
             win_block = True
             break
@@ -118,20 +129,23 @@ def make_move_ai(game:list, moves_list:list, ai_letter, player_letter):
             poing = 5
         elif game[5] == ai_letter:
             for pos in sides:
-                if game[pos] == " " and win_block is False and game[opposite_side(pos)] != player_letter:
+                opos = Oposite(pos)
+                if game[pos] == " " and win_block is False and game[opos.oposite()] != player_letter:
                     win_block = True
                     poing = pos
                     break
 
         elif win_block is False:
             for pos in corners:
-                if game[pos] == " " and win_block is False and game[opposite_corner(pos)] != player_letter:
+                opos = Oposite(pos)
+                if game[pos] == " " and win_block is False and game[opos.oposite()] != player_letter:
                     win_block = True
                     poing = pos
                     break
 
             for pos in sides:
-                if game[pos] == " " and win_block is False and game[opposite_side(pos)] != player_letter:
+                opos = Oposite(pos)
+                if game[pos] == " " and win_block is False and game[opos.oposite()] != player_letter:
                     win_block = True
                     poing = pos
                     break
@@ -159,51 +173,55 @@ def make_move_ai(game:list, moves_list:list, ai_letter, player_letter):
 
     moves_list.remove(poing)
     return poing
+class Oposite():
+    '''class for finding oposite corner or side'''
+    def __init__(self, pos) -> int:
+        self.pos = pos
+    
+    def oposite(self):
+        '''Finds oposite corner or side'''
+        if self.pos == 1:
+            op_pos = 9
+        elif self.pos == 3:
+            op_pos = 7
+        elif self.pos == 7:
+            op_pos = 3
+        elif self.pos == 9:
+            op_pos = 1
+        elif self.pos == 2:
+            op_pos = 8
+        elif self.pos == 4:
+            op_pos = 6
+        elif self.pos == 6:
+            op_pos = 4
+        else:
+            op_pos = 2
+        return op_pos
 
-def opposite_corner(corner):
-    '''Returns corner number oposite to given'''
-    if corner == 1:
-        op_corner = 9
-    elif corner == 3:
-        op_corner = 7
-    elif corner == 7:
-        op_corner = 3
-    else:
-        op_corner = 1
-    return op_corner
-
-def opposite_side(side):
-    '''Returns side number oposite to given'''
-    if side == 2:
-        op_side = 8
-    elif side == 4:
-        op_side = 6
-    elif side == 6:
-        op_side = 4
-    else:
-        op_side = 2
-    return op_side
 
 def player_move(game:list, player_letter: str, moves_list):
     '''Alters game list, according to Player moves'''
     position = make_move(game, moves_list)
     game[position] = player_letter
 
+
 def ai_move(game:list, ai_letter: str, moves_list, player_letter):
     '''Alters game list, according to AI moves'''
     position = make_move_ai(game, moves_list, ai_letter, player_letter)
     game[position] = ai_letter
 
+
 def first_move():
     '''Heads and Tails game to determine who goes first'''
     check_if_correctly_entered = False
     while check_if_correctly_entered is False:
-        heads_tails = input("Let's firgure Our who goes first, enter 0 for Heads or 1 for tails: ")
+        heads_tails = input("Let's figure out who goes first, enter 0 for Heads or 1 for Tails: ")
         try:
             heads_tails = int(heads_tails)
             if heads_tails in (0, 1):
                 check_if_correctly_entered = True
         except ValueError:
+            logging.warning(f"{heads_tails} was entered instead of 1 or 0!!")
             continue
 
     sleep(1)
@@ -215,39 +233,42 @@ def first_move():
 
     if heads_tails == flip_a_coin:
         whose_turn = "player"
-        print("Correct, You go first")
+        print("You guessed right, You go first")
     else:
         whose_turn = "ai"
-        print("Inorrect, AI goes first")
+        print("You guessed wrong, AI goes first")
     return whose_turn
 
 def main():
     '''The main function'''
+    logging.info('Program started')
     print("Hello and welcome to the GAME!")
     game = [" "," "," "," "," "," "," "," "," "," ",]
     moves_list = [1,2,3,4,5,6,7,8,9]
     game_over = False
-    game_board = board_draw.GameBoard(game)     #send list to imported class
-    #game_board(game) #this prints game board
+    game_board = board_draw.GameBoard(game)
+    game_board.draw()
     player_letter, ai_letter = choose_your_letter()
     print(f"Your symbol is {player_letter}, computer's symbol is {ai_letter}")
+    logging.info('Symbols chosen')
     whose_turn = first_move()
-
+    logging.info('Turns determined')
     while not game_over:
         if whose_turn == "player":
             player_move(game, player_letter, moves_list)
             sleep(1)
             clear_console()
-            #game_board(game)
             game_board.draw()
             sleep(1)
             if checking(game, player_letter) is True:
                 print("WOO HOO")
                 game_over = True
+                logging.info('Program ended succesfully')
             else:
                 if len(moves_list) == 0:
                     print("No one wins this time")
                     game_over = True
+                    logging.info('Program ended succesfully')
                     break
                 else:
                     whose_turn = "ai"
@@ -258,15 +279,16 @@ def main():
             print("AI makes a move")
             sleep(1)
             clear_console()
-            #game_board(game)
             game_board.draw()
             sleep(1)
             if checking(game, ai_letter):
                 print("AI is smarter than YOU, it won!")
                 game_over = True
+                logging.info('Program ended succesfully')
             else:
                 if len(moves_list) == 0:
                     print("No one wins this time")
+                    logging.info('Program ended succesfully')
                     break
                 else:
                     whose_turn = "player"
