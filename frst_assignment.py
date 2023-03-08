@@ -1,6 +1,7 @@
 from random import randint, shuffle
 from time import sleep 
 from os import  system
+import board_draw 
 
 def clear_console():
     '''Clears console'''
@@ -8,13 +9,13 @@ def clear_console():
 
 clear_console()
 
-def game_board(game):
-    '''Prints game board'''
-    print(game[1] + '|' + game[2] + '|' + game[3] + "       " + '1' + '|' + '2' + '|' + '3')
-    print('-+-+-' + "       " + '-+-+-')
-    print(game[4] + '|' + game[5] + '|' + game[6] + "       " + '4' + '|' + '5' + '|' + '6')
-    print('-+-+-' + "       " + '-+-+-')
-    print(game[7] + '|' + game[8] + '|' + game[9] + "       " + '7' + '|' + '8' + '|' + '9')
+# def game_board(game):
+#     '''Prints game board'''
+#     print(game[1] + '|' + game[2] + '|' + game[3] + "       " + '1' + '|' + '2' + '|' + '3')
+#     print('-+-+-' + "       " + '-+-+-')
+#     print(game[4] + '|' + game[5] + '|' + game[6] + "       " + '4' + '|' + '5' + '|' + '6')
+#     print('-+-+-' + "       " + '-+-+-')
+#     print(game[7] + '|' + game[8] + '|' + game[9] + "       " + '7' + '|' + '8' + '|' + '9')
 
 def checking(game: list, letter:str) -> bool:
     '''Checks if the winning move was made and there is a winner'''
@@ -226,7 +227,8 @@ def main():
     game = [" "," "," "," "," "," "," "," "," "," ",]
     moves_list = [1,2,3,4,5,6,7,8,9]
     game_over = False
-    game_board(game) #this prints game board
+    game_board = board_draw.GameBoard(game)     #send list to imported class
+    #game_board(game) #this prints game board
     player_letter, ai_letter = choose_your_letter()
     print(f"Your symbol is {player_letter}, computer's symbol is {ai_letter}")
     whose_turn = first_move()
@@ -236,7 +238,8 @@ def main():
             player_move(game, player_letter, moves_list)
             sleep(1)
             clear_console()
-            game_board(game)
+            #game_board(game)
+            game_board.draw()
             sleep(1)
             if checking(game, player_letter) is True:
                 print("WOO HOO")
@@ -255,7 +258,8 @@ def main():
             print("AI makes a move")
             sleep(1)
             clear_console()
-            game_board(game)
+            #game_board(game)
+            game_board.draw()
             sleep(1)
             if checking(game, ai_letter):
                 print("AI is smarter than YOU, it won!")
