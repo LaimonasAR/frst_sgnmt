@@ -1,4 +1,5 @@
 class GameBoard():
+    '''Draws game boad in terminal'''
     def __init__(self, game) -> None:
         self.game = game
 
