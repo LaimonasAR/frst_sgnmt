@@ -199,13 +199,13 @@ class Opposite():
         return op_pos
 
 
-def player_move(game:list, player_letter: str, moves_list):
+def player_move(game:list, player_letter: str, moves_list) ->None:
     '''Alters game list, according to Player moves'''
     position = make_move(game, moves_list)
     game[position] = player_letter
 
 
-def ai_move(game:list, ai_letter: str, moves_list, player_letter):
+def ai_move(game:list, ai_letter: str, moves_list, player_letter) -> None:
     '''Alters game list, according to AI moves'''
     position = make_move_ai(game, moves_list, ai_letter, player_letter)
     game[position] = ai_letter
