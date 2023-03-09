@@ -79,7 +79,7 @@ def make_move(game:list, moves_list:list):
             else:
                 print("Position MUST BE integer between 1 and 9 and in the available moves table")
                 logging.warning("impossible move entered !!")
-        except ValueError: #idek cia loginima klaidos :D
+        except ValueError:
             print("Position MUST BE integer between 1 and 9 and in the available moves table")
             logging.warning(f"{pos_input} was enetered instead of integer !!")
 
@@ -260,7 +260,7 @@ def main():
             clear_console()
             game_board.draw()
             sleep(1)
-            if checking(game, player_letter) is True:
+            if checking(game, player_letter) is True: #aiskesnis pavadinimas!
                 print("WOO HOO, You won this game")
                 game_over = True
                 logging.info('Program ended succesfully')
